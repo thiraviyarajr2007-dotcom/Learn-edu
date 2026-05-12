@@ -1,0 +1,186 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Global Safety Net: Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helpers ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Strict mandate for verified users for all writes (except initial profile creation)
+    function isVerified() {
+      return isSignedIn() && (request.auth.token.email_verified == true || request.auth.token.firebase.sign_in_provider == 'google.com');
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Safer getUserData that handles non-existent docs
+    function getUserData(userId) {
+      let path = /databases/$(database)/documents/users/$(userId);
+      return exists(path) ? get(path).data : null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.email == 'vivo9900v5@gmail.com';
+    }
+
+    function isTeacher() {
+      let data = getUserData(request.auth.uid);
+      return isAdmin() || (isSignedIn() && data != null && data.get('role', '') == 'teacher');
+    }
+
+    function studentSyllabus() {
+      let data = getUserData(request.auth.uid);
+      return data != null ? data.get('syllabus', 'NONE') : 'NONE';
+    }
+
+    // --- User Profiles ---
+    match /users/{userId} {
+      function isValidUser(data, isUpdate) {
+        let requiredFields = ['uid', 'name', 'email', 'role', 'syllabus', 'grade'];
+        return (isUpdate || (data.keys().hasAll(requiredFields) && data.keys().size() >= 6)) &&
+               isValidId(userId) &&
+               (!('uid' in data) || data.uid == userId) &&
+               (!('role' in data) || data.role in ['student', 'teacher']) &&
+               (!('syllabus' in data) || data.syllabus in ['CBSE', 'TN State Board']) &&
+               (!('name' in data) || (data.name is string && data.name.size() > 0 && data.name.size() < 100)) &&
+               (!('email' in data) || (data.email is string && data.email.size() < 100)) &&
+               (!('grade' in data) || data.grade is string) &&
+               (!('dailyGoal' in data) || data.dailyGoal in ['Casual', 'Regular', 'Serious', 'Insane']) &&
+               (!('points' in data) || data.points is number);
+      }
+
+      // Allow get if owner or teacher
+      // Note: isOwner succeeds even if doc doesn't exist, as it only checks UID
+      allow get: if isOwner(userId) || isTeacher();
+      
+      // Leaderboard access
+      allow list: if isSignedIn(); 
+      
+      // Create profile: Anyone signed in can create THEIR OWN profile once
+      allow create: if isOwner(userId) && isValidUser(incoming(), false);
+      
+      // Update profile: Only owner
+      allow update: if isOwner(userId) && isValidUser(incoming(), true) &&
+                    (!('uid' in incoming()) || incoming().uid == existing().uid) &&
+                    (!('role' in incoming()) || incoming().role == existing().role) &&
+                    (!('email' in incoming()) || incoming().email == existing().email) &&
+                    incoming().diff(existing()).affectedKeys().hasOnly([
+                      'name', 'photoURL', 'syllabus', 'grade', 'age', 'dailyGoal', 
+                      'learningPreference', 'points', 'interests', 'learningGoal', 
+                      'learnerType', 'uid', 'role', 'email'
+                    ]);
+
+      // --- Alerts (Subcollection) ---
+      match /alerts/{alertId} {
+        allow read: if isOwner(userId) || isTeacher();
+        allow create: if isTeacher();
+        allow delete: if isOwner(userId) || isTeacher();
+      }
+
+      // --- Badges (Subcollection) ---
+      match /badges/{badgeId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isVerified(); 
+      }
+
+      // --- Quiz Attempts (Subcollection) ---
+      match /attempts/{attemptId} {
+        allow read: if isOwner(userId) || isTeacher();
+        // Students can create attempts, but only teachers can grade them (update score)
+        allow create: if isOwner(userId) && isVerified();
+        allow update: if isTeacher() || (isOwner(userId) && incoming().diff(existing()).affectedKeys().hasOnly(['answers', 'timestamp']));
+      }
+    }
+
+    // --- Collection Group: Quiz Attempts (for Teacher Review) ---
+    match /{path=**}/attempts/{attemptId} {
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isTeacher());
+    }
+
+    // --- Collection Group: Teacher Alerts ---
+    match /{path=**}/alerts/{alertId} {
+      allow read: if isTeacher();
+    }
+
+    // --- Courses ---
+    match /courses/{courseId} {
+      function isValidCourse(data) {
+        return data.keys().hasAll(['id', 'syllabusId', 'title', 'teacherId']) &&
+               data.id == courseId &&
+               data.syllabusId in ['CBSE', 'TN State Board'] &&
+               data.title is string && data.title.size() < 200 &&
+               data.teacherId == request.auth.uid;
+      }
+
+      allow get: if isSignedIn() && (isTeacher() || studentSyllabus() == existing().syllabusId);
+      allow list: if isSignedIn() && (isTeacher() || resource.data.syllabusId == studentSyllabus());
+      
+      allow create: if isTeacher() && isVerified() && isValidCourse(incoming());
+      allow update: if isTeacher() && isVerified() && existing().teacherId == request.auth.uid && 
+                    isValidCourse(incoming()) &&
+                    incoming().diff(existing()).affectedKeys().hasOnly(['title', 'description', 'coverImage', 'tags', 'grade', 'term', 'subject', 'updatedAt']);
+      allow delete: if isTeacher() && isVerified() && existing().teacherId == request.auth.uid;
+
+      // --- Modules ---
+      match /modules/{moduleId} {
+        allow read: if isSignedIn() && (isTeacher() || studentSyllabus() == get(/databases/$(database)/documents/courses/$(courseId)).data.syllabusId);
+        allow write: if isTeacher() && isVerified() && get(/databases/$(database)/documents/courses/$(courseId)).data.teacherId == request.auth.uid;
+      }
+
+      // --- Quizzes ---
+      match /quizzes/{quizId} {
+        allow read: if isSignedIn();
+        allow write: if isTeacher() && isVerified() && get(/databases/$(database)/documents/courses/$(courseId)).data.teacherId == request.auth.uid;
+      }
+
+      // --- Forum Posts ---
+      match /posts/{postId} {
+        allow read: if isSignedIn();
+        allow create: if isSignedIn() && incoming().authorId == request.auth.uid;
+        allow update, delete: if isSignedIn() && existing().authorId == request.auth.uid;
+
+        match /replies/{replyId} {
+          allow read: if isSignedIn();
+          allow create: if isSignedIn() && incoming().authorId == request.auth.uid;
+          allow update, delete: if isSignedIn() && existing().authorId == request.auth.uid;
+        }
+      }
+
+      // --- Interactions ---
+      match /interactions/{interactionId} {
+        allow read: if isSignedIn() && (isTeacher() || studentSyllabus() == get(/databases/$(database)/documents/courses/$(courseId)).data.syllabusId);
+        allow create: if isSignedIn() && incoming().senderId == request.auth.uid;
+      }
+    }
+
+    // --- Progress ---
+    match /users/{userId}/progress/{progressId} {
+      allow read: if isOwner(userId);
+      allow create, update: if isOwner(userId) && incoming().userId == userId && incoming().userId == request.auth.uid;
+    }
+
+    // --- Connection Test ---
+    match /test/connection {
+      allow read: if true;
+    }
+  }
+}

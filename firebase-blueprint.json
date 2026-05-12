@@ -1,0 +1,196 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile information",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["student", "teacher"] },
+        "syllabus": { "type": "string", "enum": ["CBSE", "TN State Board"] },
+        "dailyGoal": { "type": "string", "enum": ["Casual", "Regular", "Serious", "Insane"] },
+        "learningPreference": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "points": { "type": "number", "description": "Gamification points earned" },
+        "interests": { "type": "array", "items": { "type": "string" } },
+        "learningGoal": { "type": "string" }
+      },
+      "required": ["uid", "name", "email", "role", "syllabus"]
+    },
+    "Badge": {
+      "title": "Badge",
+      "description": "Awards earned by users",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "icon": { "type": "string" },
+        "criteria": { "type": "string" },
+        "awardedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "awardedAt"]
+    },
+    "Quiz": {
+      "title": "Quiz",
+      "description": "Quiz for a module",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "moduleId": { "type": "string" },
+        "title": { "type": "string" },
+        "totalPoints": { "type": "number" },
+        "questions": { "type": "array" }
+      },
+      "required": ["id", "moduleId", "title"]
+    },
+    "QuizAttempt": {
+      "title": "QuizAttempt",
+      "description": "Student result for a quiz",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "quizId": { "type": "string" },
+        "courseId": { "type": "string" },
+        "answers": { "type": "object" },
+        "score": { "type": "number" },
+        "graded": { "type": "boolean" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "quizId", "score", "graded", "timestamp"]
+    },
+    "ForumPost": {
+      "title": "ForumPost",
+      "description": "A post in the course forum",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "courseId": { "type": "string" },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "authorId": { "type": "string" },
+        "authorName": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "type": { "type": "string", "enum": ["question", "announcement"] }
+      },
+      "required": ["id", "courseId", "title", "content", "authorId", "createdAt"]
+    },
+    "ForumReply": {
+      "title": "ForumReply",
+      "description": "A reply to a forum post",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "postId": { "type": "string" },
+        "content": { "type": "string" },
+        "authorId": { "type": "string" },
+        "authorName": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "postId", "content", "authorId", "createdAt"]
+    },
+    "Course": {
+      "title": "Course",
+      "description": "A course associated with a syllabus",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "syllabusId": { "type": "string" },
+        "grade": { "type": "string" },
+        "term": { "type": "string", "enum": ["Term 1", "Term 2", "Term 3", "Full Year"] },
+        "subject": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "teacherId": { "type": "string" },
+        "coverImage": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["id", "syllabusId", "title", "teacherId", "grade", "term", "subject"]
+    },
+    "Module": {
+      "title": "Module",
+      "description": "A lesson module within a course",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "courseId": { "type": "string" },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "order": { "type": "number" },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["id", "courseId", "title", "content", "order"]
+    },
+    "Progress": {
+      "title": "Progress",
+      "description": "Tracking user progress through modules",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "moduleId": { "type": "string" },
+        "courseId": { "type": "string" },
+        "status": { "type": "string", "enum": ["not-started", "in-progress", "completed"] },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "moduleId", "courseId", "status", "updatedAt"]
+    },
+    "Interaction": {
+      "title": "Interaction",
+      "description": "Messages between students and teachers",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "courseId": { "type": "string" },
+        "senderId": { "type": "string" },
+        "senderName": { "type": "string" },
+        "message": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "role": { "type": "string" }
+      },
+      "required": ["id", "courseId", "senderId", "message", "timestamp"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": "User",
+      "description": "Stored user profiles"
+    },
+    "courses/{courseId}": {
+      "schema": "Course",
+      "description": "Course definitions"
+    },
+    "courses/{courseId}/modules/{moduleId}": {
+      "schema": "Module",
+      "description": "Modules for a specific course"
+    },
+    "users/{userId}/progress/{progressId}": {
+      "schema": "Progress",
+      "description": "User specific course progress"
+    },
+    "courses/{courseId}/interactions/{interactionId}": {
+      "schema": "Interaction",
+      "description": "Chat messages for a course"
+    },
+    "courses/{courseId}/quizzes/{quizId}": {
+      "schema": "Quiz",
+      "description": "Quizzes associated with a course/module"
+    },
+    "users/{userId}/attempts/{attemptId}": {
+      "schema": "QuizAttempt",
+      "description": "User specific quiz attempts"
+    },
+    "users/{userId}/badges/{badgeId}": {
+      "schema": "Badge",
+      "description": "Badges earned by the user"
+    },
+    "courses/{courseId}/posts/{postId}": {
+      "schema": "ForumPost",
+      "description": "Forum posts for a course"
+    },
+    "courses/{courseId}/posts/{postId}/replies/{replyId}": {
+      "schema": "ForumReply",
+      "description": "Replies to a forum post"
+    }
+  }
+}

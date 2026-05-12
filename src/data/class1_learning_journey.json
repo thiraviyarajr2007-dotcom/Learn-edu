@@ -1,0 +1,213 @@
+[
+  {
+    "chapter_name": "Geometry - Comparisons",
+    "modules": [
+      {
+        "module_id": "math_c1_t1_g1",
+        "topic_name": "Top and Bottom",
+        "explanation": "Look at the slide! The boy at the peak is at the TOP. The boy finishing the slide is at the BOTTOM. The red book in a stack is at the bottom, while the blue one is at the top. Can you spot the bird on the top of the tree?",
+        "difficulty": "Easy",
+        "total_timer_minutes": 5,
+        "questions": [
+          {
+            "question_id": 1,
+            "question_text": "A bird sitting on the highest branch of a tree is at the...?",
+            "options": ["Top", "Bottom", "Inside", "Outside"],
+            "correct_answer": "Top",
+            "rationale": "Top refers to the highest point of an object.",
+            "timer_per_question_seconds": 30
+          },
+          {
+            "question_id": 2,
+            "question_text": "The shoes on the floor at the base of a ladder are at the...?",
+            "options": ["Top", "Bottom", "Above", "Below"],
+            "correct_answer": "Bottom",
+            "rationale": "Bottom refers to the lowest part or base.",
+            "timer_per_question_seconds": 30
+          },
+          {
+            "question_id": 3,
+            "question_text": "If you are at the start of a slide, you are at the...?",
+            "options": ["Bottom", "Middle", "Near", "Top"],
+            "correct_answer": "Top",
+            "rationale": "You start at the highest point (top) and slide down.",
+            "timer_per_question_seconds": 30
+          },
+          {
+            "question_id": 4,
+            "question_text": "A pot placed on the ground is at the...?",
+            "options": ["Top", "Bottom", "Far", "Under"],
+            "correct_answer": "Bottom",
+            "rationale": "Ground level is the bottom.",
+            "timer_per_question_seconds": 30
+          },
+          {
+            "question_id": 5,
+            "question_text": "The flag on a pole is usually at the...?",
+            "options": ["Bottom", "Near", "Top", "Inside"],
+            "correct_answer": "Top",
+            "rationale": "Flags are hoisted to the peak (top) of the pole.",
+            "timer_per_question_seconds": 30
+          }
+        ]
+      },
+      {
+        "module_id": "math_c1_t1_g2",
+        "topic_name": "Inside and Outside",
+        "explanation": "Fruits like Papaya have seeds INSIDE. A Nut like Cashew has its nut OUTSIDE. When you are in your room, you are inside. When you play in the garden, you are outside.",
+        "difficulty": "Easy",
+        "total_timer_minutes": 5,
+        "questions": [
+          {
+            "question_id": 1,
+            "question_text": "An eraser kept in a pencil box is...?",
+            "options": ["Inside", "Outside", "Top", "Bottom"],
+            "correct_answer": "Inside",
+            "rationale": "Inside means within the boundaries of a container.",
+            "timer_per_question_seconds": 30
+          },
+          {
+            "question_id": 2,
+            "question_text": "A dog sitting in its kennel is...?",
+            "options": ["Outside", "Above", "Below", "Inside"],
+            "correct_answer": "Inside",
+            "rationale": "The kennel acts as a container for the dog.",
+            "timer_per_question_seconds": 30
+          },
+          {
+            "question_id": 3,
+            "question_text": "When you go out to the playground, you are ____ the class.",
+            "options": ["Inside", "Outside", "Near", "Far"],
+            "correct_answer": "Outside",
+            "rationale": "Outside means not being within the room.",
+            "timer_per_question_seconds": 30
+          },
+          {
+            "question_id": 4,
+            "question_text": "The seeds of an apple are found...?",
+            "options": ["Inside", "Outside", "Top", "Bottom"],
+            "correct_answer": "Inside",
+            "rationale": "Apple seeds are within the fruit.",
+            "timer_per_question_seconds": 30
+          },
+          {
+            "question_id": 5,
+            "question_text": "A car parked on the street is ____ the house.",
+            "options": ["Inside", "Bottom", "Outside", "Under"],
+            "correct_answer": "Outside",
+            "rationale": "The car is not in the house.",
+            "timer_per_question_seconds": 30
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "chapter_name": "Numbers - 1 to 9",
+    "modules": [
+      {
+        "module_id": "math_c1_t1_n1",
+        "topic_name": "Numbers 1-5",
+        "explanation": "Let's count! 1 kitten, 2 birds, 3 monkeys, 4 deer, and 5 clouds. Each number tells us how many objects there are. One bus has 1 bead, four flowers have 4 beads!",
+        "difficulty": "Easy",
+        "total_timer_minutes": 8,
+        "questions": [
+          {
+            "question_id": 1,
+            "question_text": "How many eyes do we have?",
+            "options": ["1", "2", "3", "5"],
+            "correct_answer": "2",
+            "rationale": "Humans have two eyes.",
+            "timer_per_question_seconds": 45
+          },
+          {
+            "question_id": 2,
+            "question_text": "What comes after 3?",
+            "options": ["2", "5", "4", "1"],
+            "correct_answer": "4",
+            "rationale": "The count goes 1, 2, 3, 4...",
+            "timer_per_question_seconds": 45
+          },
+          {
+            "question_id": 3,
+            "question_text": "How many fingers are shown on one full hand?",
+            "options": ["2", "4", "5", "3"],
+            "correct_answer": "5",
+            "rationale": "One hand has 5 fingers.",
+            "timer_per_question_seconds": 45
+          },
+          {
+            "question_id": 4,
+            "question_text": "How many tails does a dog have?",
+            "options": ["1", "2", "0", "4"],
+            "correct_answer": "1",
+            "rationale": "Dogs have one tail.",
+            "timer_per_question_seconds": 45
+          },
+          {
+            "question_id": 5,
+            "question_text": "Which is more: 3 balls or 5 balls?",
+            "options": ["3 balls", "5 balls", "Both same", "None"],
+            "correct_answer": "5 balls",
+            "rationale": "5 is a bigger number than 3.",
+            "timer_per_question_seconds": 45
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "chapter_name": "Environmental Science - My Body",
+    "modules": [
+      {
+        "module_id": "evs_c1_t1_b1",
+        "topic_name": "Our Senses",
+        "explanation": "We have 5 sense organs that help us know the world! Eyes to SEE, Ears to HEAR, Nose to SMELL, Tongue to TASTE, and Skin to FEEL. A dog's sense of smell is much stronger than a human's!",
+        "difficulty": "Easy",
+        "total_timer_minutes": 10,
+        "questions": [
+          {
+            "question_id": 1,
+            "question_text": "Which body part helps us see colors?",
+            "options": ["Ears", "Nose", "Eyes", "Tongue"],
+            "correct_answer": "Eyes",
+            "rationale": "Eyes are for seeing.",
+            "timer_per_question_seconds": 45
+          },
+          {
+            "question_id": 2,
+            "question_text": "What do we use to hear a bell?",
+            "options": ["Ears", "Eyes", "Hands", "Legs"],
+            "correct_answer": "Ears",
+            "rationale": "Ears are for hearing sounds.",
+            "timer_per_question_seconds": 45
+          },
+          {
+            "question_id": 3,
+            "question_text": "We taste a sweet mango with our...?",
+            "options": ["Nose", "Tongue", "Skin", "Eyes"],
+            "correct_answer": "Tongue",
+            "rationale": "Tongue helps us taste sweet, sour, salty, and bitter.",
+            "timer_per_question_seconds": 45
+          },
+          {
+            "question_id": 4,
+            "question_text": "Which part helps us feel if a stone is hard or soft?",
+            "options": ["Nose", "Ears", "Skin", "Eyes"],
+            "correct_answer": "Skin",
+            "rationale": "Skin helps us feel touch and texture.",
+            "timer_per_question_seconds": 45
+          },
+          {
+            "question_id": 5,
+            "question_text": "We smell a flower with our...?",
+            "options": ["Mouth", "Ears", "Eyes", "Nose"],
+            "correct_answer": "Nose",
+            "rationale": "Nose is for smelling scents.",
+            "timer_per_question_seconds": 45
+          }
+        ]
+      }
+    ]
+  }
+]
